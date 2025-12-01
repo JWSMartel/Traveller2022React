@@ -1,16 +1,17 @@
 import { useState } from "react";
+import { CreatePlanet } from "./CreatePlanet";
 
 export default function App() {
-  const [planetDesc, setPlanetDesc] = useState("Planet Desc");
+  const [planet, setPlanet] = useState("Planet Desc");
 
   function PlanetBtnClicked(){
-    setPlanetDesc("Planet Btn Clicked!");
+    setPlanet(CreatePlanet());
   }
 
   return (
     <div>
       <button className="PlanetBtn" onClick={PlanetBtnClicked}>Create a Planet</button>
-      <p>{planetDesc}</p>
+      <p>{planet}</p>
     </div>
   );
 }
