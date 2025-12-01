@@ -11,7 +11,7 @@ export default function App() {
   return (
     <div>
       <button className="PlanetBtn" onClick={PlanetBtnClicked}>Create a Planet</button>
-      <p>{planet}</p>
+      {planet}
     </div>
   );
 }
