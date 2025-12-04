@@ -7,15 +7,22 @@ export function CreateAtmo(sizeRoll) {
   let description = "";
   let pressure = "";
   let survivalGearReq = "";
-  const atmoRoll = Roll(2, 12) - 7 + sizeRoll;
+  let atmoRoll = Roll(2, 12) - 7 + sizeRoll;
   if (atmoRoll < 1) {
     //no atmo
+    atmoRoll = 0;
     name += "0";
     atmo = "None";
     description += "Moon like atmosphere. ";
-    pressure = "00";
+    pressure = "0.0";
     survivalGearReq = "Vacc Suit";
-  } else {
+  } else if(atmoRoll>=15){
+    atmoRoll=15;
+    name += "F";
+    atmo = "Unusual";
+    pressure = "Varies";
+    survivalGearReq = "Varies";
+  }else {
     name += atmoRoll;
     switch (atmoRoll) {
       case 1:
@@ -95,16 +102,10 @@ export function CreateAtmo(sizeRoll) {
         pressure = "0.5 or less";
         description += "Thin atmospheres have low N2/O2 levels that mean the average surface pressure is too low to support human life outside of deep lowlands and depressions. ";
         break;
-      case 15:
-        name += "F";
-        atmo = "Unusual";
-        pressure = "Varies";
-        survivalGearReq = "Varies";
-        break;
       default:
         Log.e(TAG, "Something went wrong in Atmo creation");
     }
-    if (description.includes("Tainted")) { //Shouldn't this be checking atmo and not description?
+    if (atmo.includes("Tainted")) {
       description += "Breathing this atmosphere causes 1d6 damage every few minutes. ";
     }
   }
