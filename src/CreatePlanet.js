@@ -17,16 +17,12 @@ export function CreatePlanet() {
   let name = "";
   let survivalGearReq;
 
-  console.log("Name Start: "+name);
-
   //Size
   const { name: planetName, size: planetSize, g: planetGravity, description: planetDescription, sizeRoll: sizeRoll } = CreatePlanetSize();
   name += planetName;
   const size = planetSize;
   const g = planetGravity;
   description += planetDescription;
-
-  console.log("Name after size: "+name);
 
   //Atmo
   const { name: atmoName, atmo: atmoAtmo, pressure: atmoPressure, description: atmoDescription, atmoRoll: atmoRoll, survivalGearReq:atmoSGR } = CreateAtmo(sizeRoll);
@@ -36,20 +32,17 @@ export function CreatePlanet() {
   description += atmoDescription;
   survivalGearReq = atmoSGR;
 
-  console.log("Name after atmo: "+name);
-
   //Temp
   const {temp: tempTemp, description:tempDescripttion} = CreateTemp(atmoRoll);
   const temp = tempTemp;
   description += tempDescripttion;
 
   //hydro
-  const {name: hydroName, hydro: hydroHydro, description:hydroDescription} = CreateHydro(sizeRoll, atmoRoll, temp);
+  const {name: hydroName, hydro: hydroHydro, description:hydroDescription, hydroRoll:hydroRRoll} = CreateHydro(sizeRoll, atmoRoll, temp);
   name+=hydroName;
   const hydro = hydroHydro;
   description += hydroDescription;
-
-  console.log("Name after hydro: "+name);
+  let hydroRoll = hydroRRoll;
 
   //pop
   const {name: popName, popRoll: popRollRoll, pbg:popPbg, pop:popPop, description:popDescription} = CreatePlanetPop();
@@ -57,74 +50,94 @@ export function CreatePlanet() {
   const popRoll = popRollRoll;
   const pbg = popPbg;
   const pop =  popPop;
-  description += popDescription;
-
-  console.log("Name after pop: "+name);
+  //description += popDescription;
+  const popDesc = popDescription;
 
   //Starport
   const starport = CreateStarport(popRoll);
   name = starport + name;
 
-  console.log("Name after starport: "+name);
-
   let govt = '';
+  let govDes;
   let culture = '';
+  let cultDesc = '';
   let law = '';
   let tech = '';
+  let tDesc = '';
   let govRoll;
   let techRoll;
+  let bases;
   //if pop is zero, govt, law, and tech are automatically zero
   if(pop==0){
     //gov
     govt = "None";
     name += "0";
     govRoll = 0;
-    console.log("Name after Gov: "+name);
     //Culture
     culture = 'None';
     //Law Level
     law = 'None';
     name += '0';
-    console.log("Name after Law: "+name);
     //Tech Level
     tech = 'None';
     techRoll = '0';
     name += '-0';
-    console.log("Name after Tech: "+name);
     description += "With no population, there is no government structure, culture, law, or tech here. ";
   }else{
     //Govt
-    const {govt:govType, name:govName, description:govtDescription, govRoll:govGovRoll} = CreateGov(popRoll);
+    const {govt:govType, name:govName, formatting:govtDescription, govRoll:govGovRoll} = CreateGov(popRoll);
     govt = govType;
     name += govName;
-    description += govtDescription;
+    //description += govtDescription;
+    govDes = govtDescription;
     govRoll = govGovRoll;
-    console.log("Name after Gov: "+name);
     //Culture
     const {culture:cultCulture, description:cultDescription} = CreateCulture();
     culture = cultCulture;
-    description += cultDescription;
+    cultDesc = cultDescription;
+    //description += cultDescription;
     //Law Level
     law = CreateLawLevel(govRoll);
     name += law;
-    console.log("Name after Law: "+name);
     //Tech Level
     const {tech:techTech, description:techDescription, techRoll:techRRoll} = CreateTechLevel(starport, sizeRoll, atmoRoll, hydro, popRoll, govRoll);
     tech = techTech;
-    description += techDescription;
+    tDesc = techDescription;
+    //description += techDescription;
     name += '-'+tech;
     techRoll = techRRoll;
-    console.log("Name after Tech: "+name);
     //Bases
-    description += CreateBases(starport, popRoll, tech, law);
+    bases =  CreateBases(starport, popRoll, tech, law);
+    description += bases;
   }
 
   //Trade Codes
-  const {tradeCodes, tsDesc} = CheckTradeCodes(sizeRoll, atmoRoll, hydro, popRoll, govRoll, law, techRoll);
+  const {tradeCodes, tsDesc} = CheckTradeCodes(sizeRoll, atmoRoll, hydroRoll, popRoll, govRoll, law, techRoll);
   description += tsDesc;
 
   //Zoning
   const zone = CheckZoning(atmoRoll, govRoll, law);
+
+  if(bases!=null){
+    if(bases.includes('Military')){
+      name += ' M ';
+    }
+    if(bases.includes('Naval')){
+      name += ' N ';
+    }
+    if(bases.includes('Scout')){
+      name += ' S ';
+    }
+    if(bases.includes('Corsair')){
+      name += ' C ';
+    }
+  }
+  name += tradeCodes;
+  if(zone === 'Red'){
+    name += 'R';
+  }else if(zone === 'Amber'){
+    name += 'A';
+  }
 
   return (
     <div>
@@ -146,6 +159,9 @@ export function CreatePlanet() {
         Zoning: {zone}<br />
       </p>
       <p>Planet Description: <br />{description}</p>
+      <p>{govDes}</p>
+      <p>{cultDesc}</p>
+      <p>{tDesc}</p>
     </div>
   );
 }

@@ -16,7 +16,6 @@ export function CreateFaction(pop) {
     case 2:
     case 3:
       fdescription += 'They are an obscure group that few have heard of them and they have no popular support. ';
-      console.log("FLAG");
       break;
     case 4:
     case 5:

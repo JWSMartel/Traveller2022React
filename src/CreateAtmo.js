@@ -11,7 +11,7 @@ export function CreateAtmo(sizeRoll) {
   if (atmoRoll < 1) {
     //no atmo
     atmoRoll = 0;
-    name += "0";
+    name += atmoRoll;
     atmo = "None";
     description += "Moon like atmosphere. ";
     pressure = "0.0";
@@ -23,48 +23,56 @@ export function CreateAtmo(sizeRoll) {
     pressure = "Varies";
     survivalGearReq = "Varies";
   }else {
-    name += atmoRoll;
     switch (atmoRoll) {
       case 1:
+        name += atmoRoll;
         atmo = "Trace";
         description += "Mars like atmosphere. ";
         pressure = "0.001-0.09";
         survivalGearReq = "Vacc Suit";
         break;
       case 2:
+        name += atmoRoll;
         atmo = "Very Thin, Tainted";
         pressure = "0.1-0.42";
         survivalGearReq = "Respirator, Filter";
         break;
       case 3:
+        name += atmoRoll;
         atmo = "Very Thin";
         pressure = "0.1-0.42";
         survivalGearReq = "Respirator";
         break;
       case 4:
+        name += atmoRoll;
         atmo = "Thin, Tainted";
         pressure = "0.43-0.7";
         survivalGearReq = "Filter";
         break;
       case 5:
+        name += atmoRoll;
         atmo = "Thin";
         pressure = "0.43-0.7";
         break;
       case 6:
+        name += atmoRoll;
         atmo = "Standard";
         description += "Earth like atmosphere. ";
         pressure = "0.71-1.49";
         break;
       case 7:
+        name += atmoRoll;
         atmo = "Standard, Tainted";
         pressure = "0.71-1.49";
         survivalGearReq = "Filter";
         break;
       case 8:
+        name += atmoRoll;
         atmo = "Dense";
         pressure = "1.5-2.49";
         break;
       case 9:
+        name += atmoRoll;
         atmo = "Dense, Tainted";
         pressure = "1.5-2.49";
         survivalGearReq = "Filter";
@@ -103,7 +111,7 @@ export function CreateAtmo(sizeRoll) {
         description += "Thin atmospheres have low N2/O2 levels that mean the average surface pressure is too low to support human life outside of deep lowlands and depressions. ";
         break;
       default:
-        Log.e(TAG, "Something went wrong in Atmo creation");
+        console.log("Something went wrong in Atmo creation");
     }
     if (atmo.includes("Tainted")) {
       description += "Breathing this atmosphere causes 1d6 damage every few minutes. ";

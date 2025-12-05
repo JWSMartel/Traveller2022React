@@ -73,5 +73,5 @@ export function CreateHydro(sizeRoll, atmoRoll, temp) {
       }
     }
   }
-  return { name, hydro, description };
+  return { name, hydro, description, hydroRoll };
 }
