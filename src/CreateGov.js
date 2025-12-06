@@ -24,11 +24,9 @@ export function CreateGov(popRoll) {
   if (numOfFactions > 0) {
     description += "There are " + numOfFactions + " other factions on the planet as well. ";
     for (let f = 1; f <= numOfFactions; f++) {
-      description += "\nSplinter faction #" + f + ": ";
+      description += "\n\nSplinter faction #" + f + ": ";
       const {fgov, fdescription} = CreateFaction(popRoll);
-      //if fgov==govt they are a splinter faction within the government.
-      console.log('fdes: '+fdescription);
-      description += fgov + ' '+fdescription;
+      description += fgov + '\n'+fdescription;
     }
   }
 

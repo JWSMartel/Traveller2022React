@@ -12,9 +12,9 @@ import { CreateStarport } from "./CreateStarport";
 import { CreateTechLevel } from "./CreateTechLevel";
 import { CreateTemp } from "./CreateTemp";
 
-export function CreatePlanet() {
+export function CreatePlanet(userInput) {
   let description = "";
-  let name = "";
+  let name = '';
   let survivalGearReq;
 
   //Size
@@ -139,6 +139,10 @@ export function CreatePlanet() {
     name += 'A';
   }
 
+  if(userInput != undefined){
+    name = userInput+' '+name;
+  }
+
   return (
     <div>
       <p>
@@ -162,6 +166,7 @@ export function CreatePlanet() {
       <p>{govDes}</p>
       <p>{cultDesc}</p>
       <p>{tDesc}</p>
+      {survivalGearReq !== ''?(<p>Requried survival gear: {survivalGearReq}</p>):null}
     </div>
   );
 }

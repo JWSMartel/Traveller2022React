@@ -2,16 +2,19 @@ import { useState } from "react";
 import { CreatePlanet } from "./CreatePlanet";
 
 export default function App() {
-  const [planet, setPlanet] = useState("Planet Desc");
+  const [output, setOutput] = useState("");
+  const [userInput, setUserInput] = useState();
 
   function PlanetBtnClicked(){
-    setPlanet(CreatePlanet());
+    setOutput(CreatePlanet(userInput));
   }
 
   return (
     <div>
+      <label htmlFor="userInput">Enter Planet Name: </label>
+      <input type="text" id="userInput" onChange={(e) => setUserInput(e.target.value)}placeholder="Planet Name" />
       <button className="PlanetBtn" onClick={PlanetBtnClicked}>Create a Planet</button>
-      {planet}
+      {output}
     </div>
   );
 }

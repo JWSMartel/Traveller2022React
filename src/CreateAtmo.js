@@ -6,7 +6,7 @@ export function CreateAtmo(sizeRoll) {
   let atmo = "";
   let description = "";
   let pressure = "";
-  let survivalGearReq = "";
+  let survivalGearReq;
   let atmoRoll = Roll(2, 12) - 7 + sizeRoll;
   if (atmoRoll < 1) {
     //no atmo

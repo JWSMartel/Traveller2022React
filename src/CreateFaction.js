@@ -9,8 +9,6 @@ export function CreateFaction(pop) {
   fgov = govType + ":";
   fdescription += govtDescription;
 
-  console.log("Faction description: "+fdescription);
-
   const fstr = Roll(2,12);
   switch(fstr){
     case 2:

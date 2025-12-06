@@ -22,7 +22,6 @@ export function CreateHydro(sizeRoll, atmoRoll, temp) {
 
     if (hydroRoll < 1) {
       name += "0";
-      console.log("Hydro name: "+name);
       hydro = "0-5%";
       description += "Desert world. ";
     } else if (hydroRoll >= 10) {
