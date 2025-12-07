@@ -116,9 +116,9 @@ export function CreatePlanet(userInput) {
   description += tsDesc;
 
   //Zoning
-  const zone = CheckZoning(atmoRoll, govRoll, law);
+  const zone = CheckZoning(atmoRoll, govRoll, law);   
 
-  if(bases!=null){
+  if(bases!=''){
     if(bases.includes('Military')){
       name += ' M ';
     }
@@ -131,6 +131,11 @@ export function CreatePlanet(userInput) {
     if(bases.includes('Corsair')){
       name += ' C ';
     }
+    if(bases.includes('Highport')){
+      name += ' ';
+    }
+  }else{
+    name += ' ';
   }
   name += tradeCodes;
   if(zone === 'Red'){
@@ -143,30 +148,6 @@ export function CreatePlanet(userInput) {
     name = userInput+' '+name;
   }
 
-  return (
-    <div>
-      <p>
-        Planet Name: {name}<br />
-        Starport Rating: {starport}<br />
-        Size: {size}<br />
-        Gravity: {g}<br />
-        Atmo: {atmo}<br />
-        Pressure: {pressure}<br />
-        Temp: {temp}℃<br />
-        Hydro: {hydro}<br />
-        Population: {pop}<br />
-        Govt: {govt}<br />
-        Culture: {culture}<br />
-        Law Level: {law}<br />
-        Tech Level: {tech}<br />
-        Trade Codes: {tradeCodes}<br />
-        Zoning: {zone}<br />
-      </p>
-      <p>Planet Description: <br />{description}</p>
-      <p>{govDes}</p>
-      <p>{cultDesc}</p>
-      <p>{tDesc}</p>
-      {survivalGearReq !== ''?(<p>Requried survival gear: {survivalGearReq}</p>):null}
-    </div>
-  );
+  const planet = {name, starport,size,g,atmo,pressure,temp,hydro,pop,govt,culture,law,tech,tradeCodes,zone,description,govDes,cultDesc,tDesc,survivalGearReq};
+  return planet;
 }

@@ -177,7 +177,5 @@ export function CreateCulture() {
       }
       break;
   }
-
-  console.log("Culture in culture: "+culture);
   return { culture, description };
 }

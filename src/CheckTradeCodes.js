@@ -105,7 +105,6 @@ export function CheckTradeCodes(size, atmo, hydro, pop, gov, law, tech) {
   }
 
   //Waterworld
-  console.log('hydro in trade check: '+hydro);
   if (((atmo >= 3 && atmo <= 9) || atmo >= 13) && hydro >= 10) {
     tradeCodes += 'Wa ';
     description += 'Almost entirely water-ocean across their surface. ';
