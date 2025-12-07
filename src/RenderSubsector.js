@@ -1,12 +1,18 @@
-export function RenderSubsector(subsector) {
-  const flatSubsector = subsector.flat(Infinity);
-  return (
+export function RenderSubsector(subsector, subsectorDetails) {
+  const flatSubsector = subsector.flat(Infinity)
+                        .filter((line) => typeof line === 'string' && line.trim() !== '');
+  const flatDetails = subsectorDetails
+                        .flat(Infinity)
+                        .filter((item) => item != null);
+
+  const show = (
     <div>
-      {flatSubsector
-        .filter((line) => typeof line === 'string' && line.trim() !== '')
-        .map((item, index) => (
-          <div key={index}>{String(item)}</div>
+      <p>Routes will eventually go here</p>
+      {flatSubsector.map((item, index) => (
+          <button key={index}>{String(item)}</button>
         ))}
     </div>
   );
+
+  return ([flatSubsector, flatDetails]);
 }

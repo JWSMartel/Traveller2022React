@@ -12,15 +12,12 @@ export function PlanetCheck(sectorDensity, row, col) {
 
   switch (sectorDensity) {
     case 'Rift':
-      console.log("Rift hit");
       occurrence -= 2;
       break;
     case 'Sparse':
-      console.log("Sparse hit");
       occurrence--;
       break;
     case 'Dense':
-      console.log("Dense hit");
       occurrence++;
       break;
   }
