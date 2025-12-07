@@ -22,7 +22,7 @@ export function RenderPlanet(planet) {
       <p>{planet.ovDes}</p>
       <p>{planet.cultDesc}</p>
       <p>{planet.tDesc}</p>
-      {planet.survivalGearReq !== '' ? (<p>Requried survival gear: {planet.survivalGearReq}</p>) : null}
+      {planet.survivalGearReq !== undefined ? (<p>Requried survival gear: {planet.survivalGearReq}</p>) : null}
     </div>
   );
 }

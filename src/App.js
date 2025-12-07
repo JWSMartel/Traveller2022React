@@ -14,11 +14,12 @@ export default function App() {
   const PlanetBtnClicked = () => {
     const planet=CreatePlanet(userInput);
     setOutput(RenderPlanet(planet));
+    setClickedDetail(null);
   };
 
   const SubsectorBtnClicked = () =>{
     const [subsector, subsectorDetails] = CreateSubsector(sectorDensity);
-    const [flatSubsector, flatDetails] =  RenderSubsector(subsector, subsectorDetails);
+    const [flatSubsector, flatDetails, routes] =  RenderSubsector(subsector, subsectorDetails);
     setOutput(
       <div>
         <p>Routes will eventually go here</p>
