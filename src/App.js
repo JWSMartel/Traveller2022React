@@ -22,7 +22,15 @@ export default function App() {
     const [flatSubsector, flatDetails, routes] =  RenderSubsector(subsector, subsectorDetails);
     setOutput(
       <div>
-        <p>Routes will eventually go here</p>
+        {routes.length>0?(
+          <ul>
+            {routes.map((route, index) => (
+              <li key={index}>{route.formatRoute}</li>
+            ))}
+          </ul>
+        ):(
+          <p>No Routes</p>
+        )}
         {flatSubsector.map((item, index) => (
           <button key={index} onClick={()=>PlanetDetails(flatDetails[index])}>{String(item)}</button>
         ))}

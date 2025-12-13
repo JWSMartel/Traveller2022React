@@ -11,40 +11,80 @@ export function FindRoutes(sec) {
   ];
   const routes = [];
 
+  function formatLocation(row, col) {
+    return `0${row}${col === 10 ? col : `0${col}`}`;
+  }
+
+  function addRoute(currentCellLoc, neighborCellLoc) {
+    routes.push({ formatRoute: `${currentCellLoc} ${neighborCellLoc}` });
+  }
+
+  function matchesTradeCodes(cell1, codes1, cell2, codes2) {
+    return codes1.some(code => cell1.tradeCodes.includes(code)) && 
+           codes2.some(code => cell2.tradeCodes.includes(code));
+  }
+
   for (let row = 0; row < sec.length; row++) {
     for (let col = 0; col < sec[row].length; col++) {
       const currentCell = sec[row][col];
+      if (!currentCell) {
+        continue;
+      }      
 
-      //Check if adjacent cells both have class A starports
-      if (currentCell && currentCell.starport == 'A') {
+      // Check if current cell has a naval base
+      if (currentCell.bases?.includes('Naval')) {
         for (let [dRow, dCol] of directions) {
           const neighborRow = row + dRow;
           const neighborCol = col + dCol;
 
           if (neighborRow >= 0 && neighborRow < sec.length && neighborCol >= 0 && neighborCol < sec[row].length) {
             const neighborCell = sec[neighborRow][neighborCol];
-
-            if (neighborCell && neighborCell.starport === currentCell.starport) {
-              const currentCellLoc = `0${row}${col === 10 ? col : `0${col}`}`;
-              const neighborCellLoc = `0${neighborRow}${neighborCol === 10 ? neighborCol : `0${neighborCol}`}`;
-              const formatRoute = currentCellLoc+' '+neighborCellLoc;
-              routes.push({formatRoute});
+            if(!neighborCell){
+              continue;
+            }
+            if (neighborCell && neighborCell.bases?.includes('Naval')) {
+              addRoute(formatLocation(row, col), formatLocation(neighborRow, neighborCol));
             }
           }
         }
       }
 
-      //Check if adjacent cells both have naval bases
+      // Check for trade codes: Industrial or High Tech with Asteroid, Desert, Ice-Capped, or Non-Industrial
+      if (matchesTradeCodes(currentCell, ['In', 'Ht'], currentCell, ['As', 'De', 'Ic', 'Ni'])) {
+        for (let [dRow, dCol] of directions) {
+          const neighborRow = row + dRow;
+          const neighborCol = col + dCol;
 
-      //Check if world one has Industrial tag and world two has either asteroid, dessert, ice-capped, or non-ind
+          if (neighborRow >= 0 && neighborRow < sec.length && neighborCol >= 0 && neighborCol < sec[row].length) {
+            const neighborCell = sec[neighborRow][neighborCol];
+            if(!neighborCell){
+              continue;
+            }
+            if (matchesTradeCodes(currentCell, ['In', 'Ht'], neighborCell, ['As', 'De', 'Ic', 'Ni'])) {
+              addRoute(formatLocation(row, col), formatLocation(neighborRow, neighborCol));
+            }
+          }
+        }
+      }
 
-      //Check if world one has high tech tag and world two has either asteroid, dessert, ice-capped, or non-ind
+      // Check for trade codes: High Pop or Rich with Agro, Garden, or Waterworld
+      if (matchesTradeCodes(currentCell, ['Hi', 'Ri'], currentCell, ['Ag', 'Ga', 'Wa'])) {
+        for (let [dRow, dCol] of directions) {
+          const neighborRow = row + dRow;
+          const neighborCol = col + dCol;
 
-      //Check if world one has high pop tag and world two has either agro, garden, or waterworld
-
-      //Check if world one has rich tag and world two has either agro, garden, or waterworld
+          if (neighborRow >= 0 && neighborRow < sec.length && neighborCol >= 0 && neighborCol < sec[row].length) {
+            const neighborCell = sec[neighborRow][neighborCol];
+            if(!neighborCell){
+              continue;
+            }
+            if (matchesTradeCodes(currentCell, ['Hi', 'Ri'], neighborCell, ['Ag', 'Ga', 'Wa'])) {
+              addRoute(formatLocation(row, col), formatLocation(neighborRow, neighborCol));
+            }
+          }
+        }
+      }
     }
   }
-  console.log(routes);
   return routes;
 }
