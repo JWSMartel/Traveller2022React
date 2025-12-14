@@ -1,7 +1,7 @@
 import { CreatePlanet } from "./CreatePlanet";
 import { Roll } from "./Roll";
 
-export function PlanetCheck(sectorDensity, row, col) {
+export function PlanetCheck(sectorDensity, row, col, planetCount) {
   let occurrence = Roll(1, 6);
   let gasGiant = true;
   const loc = `0${row}${col === 10 ? col : `0${col}`}`;
@@ -23,7 +23,8 @@ export function PlanetCheck(sectorDensity, row, col) {
   }
 
   if (occurrence >= 4) {
-    const world = CreatePlanet(loc);
+    const planetLabel = loc+' Planet'+planetCount
+    const world = CreatePlanet(planetLabel);
     return world;
   }
 

@@ -56,35 +56,39 @@ body {
   padding: 0;
 }
 
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
+ul{
   padding: 0;
-  text-align: center;
-  width: 34px;
+}
+.route-li{
+  list-style-type: none;
 }
 
-.board-row:after {
-  clear: both;
-  content: '';
-  display: table;
+/*For selection*/
+.route-li, .planetdetailbtn{
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
 }
 
-.status {
-  margin-bottom: 10px;
+.planetdetailbtn{
+  display: block;
 }
-.game {
-  display: flex;
-  flex-direction: row;
+.planetdetailbtn#hover{
+  background-color: grey;
 }
 
-.game-info {
-  margin-left: 20px;
+.area{
+  margin: 1em 0 1em 0;
+}
+
+.output{
+  display: inline-block;
+  max-width: 50%;
+}
+
+.details{
+  display: inline-block;
+  max-width: 50%;
+  margin-left: 10%;
+  vertical-align: top;
 }

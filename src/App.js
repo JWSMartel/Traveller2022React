@@ -25,14 +25,14 @@ export default function App() {
         {routes.length>0?(
           <ul>
             {routes.map((route, index) => (
-              <li key={index}>{route.formatRoute}</li>
+              <div key={index} className="route-li">route {route.formatRoute}</div>
             ))}
           </ul>
         ):(
           <p>No Routes</p>
         )}
         {flatSubsector.map((item, index) => (
-          <button key={index} onClick={()=>PlanetDetails(flatDetails[index])}>{String(item)}</button>
+          <button key={index} className='planetdetailbtn' onClick={()=>PlanetDetails(flatDetails[index])}>{String(item)}</button>
         ))}
       </div>
     );
@@ -44,18 +44,28 @@ export default function App() {
 
   return (
     <div>
-      <label htmlFor="userInput">Enter Planet Name: </label>
-      <input type="text" id="userInput" value={userInput} onChange={(e) => setUserInput(e.target.value)}placeholder="Name your creation" />
-      <button className="PlanetBtn" onClick={PlanetBtnClicked}>Create a Planet</button>
-      <select id="sectorDensity" value={sectorDensity} onChange={(e)=>setSectorDensity(e.target.value)}>
-        <option value="" disabled>Standard</option>
-        {densities.map((option, index)=>(
-          <option key={index} value={option}>{option}</option>
-        ))}
-      </select>
-      <button className="SubsectorBtn" onClick={SubsectorBtnClicked}>Create a Subsector</button>
-      {output}
-      {clickedDetail}
+      <div className="planetcreator area">
+        <label htmlFor="userInput">Enter Planet Name: </label>
+        <input type="text" id="userInput" value={userInput} onChange={(e) => setUserInput(e.target.value)}placeholder="Name your planet" />
+        <button className="PlanetBtn" onClick={PlanetBtnClicked}>Create a Planet</button>
+      </div>
+      
+      <div className="subsectorcreator area">
+        <select id="sectorDensity" value={sectorDensity} onChange={(e)=>setSectorDensity(e.target.value)}>
+          <option value="" disabled>Standard</option>
+            {densities.map((option, index)=>(
+            <option key={index} value={option}>{option}</option>
+            ))}
+        </select>
+        <button className="SubsectorBtn" onClick={SubsectorBtnClicked}>Create a Subsector</button>
+      </div>
+
+      <div className="galaxycreator area">
+        <p>Eventually the controls for a galaxy creator will go here.</p>
+      </div>
+
+      <div className="output area">{output}</div>
+      <div className="details area">{clickedDetail}</div>
     </div>
   );
 }
