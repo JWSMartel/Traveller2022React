@@ -36,6 +36,7 @@ export default function App() {
         ))}
       </div>
     );
+    setClickedDetail(null);
   };
 
   const PlanetDetails = (planet) =>{
