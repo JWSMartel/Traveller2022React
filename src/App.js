@@ -5,6 +5,7 @@ import { RenderPlanet } from "./RenderPlanet";
 import { RenderSubsector } from "./RenderSubsector";
 import { SubsectorExport } from "./utils/SubsectorExport";
 import { PlanetExport } from "./utils/PlanetExport";
+import { CreateGalaxy } from "./CreateGalaxy";
 
 export default function App() {
   //UI Elements
@@ -25,7 +26,7 @@ export default function App() {
   //flags for export context
   const [planetShow, setPlanetShow] = useState(false);
   const [sectorShow, setSectorShow] = useState(false);
-  const [galaxyShow, setgalaxyShow] = useState(false);
+  const [galaxyShow, setGalaxyShow] = useState(false);
 
   const PlanetBtnClicked = () => {
     setClickedDetail(null);
@@ -34,7 +35,7 @@ export default function App() {
     
     setPlanetShow(true);
     setSectorShow(false);
-    setgalaxyShow(false);
+    setGalaxyShow(false);
     setClickedDetail(null);
 
     setOutput(RenderPlanet(newPlanet));
@@ -51,7 +52,7 @@ export default function App() {
 
     setPlanetShow(false);
     setSectorShow(true);
-    setgalaxyShow(false);
+    setGalaxyShow(false);
 
     setOutput(
       <div>
@@ -85,6 +86,20 @@ export default function App() {
     }
   }
 
+  const GalaxyBtnClicked = () =>{
+    const galaxy = CreateGalaxy();
+    const flatGalaxy = galaxy.flat(Infinity).filter((line) => typeof line === 'string' && line.trim() !=='');
+    console.log(flatGalaxy);
+
+    //console.log("Galaxy: "+RenderGalaxy(galaxy));
+
+    setPlanetShow(false);
+    setSectorShow(false);
+    setGalaxyShow(true);
+    setClickedDetail(null);
+    setOutput(null);
+  }
+
   return (
     <div>
       <div className="planetcreator area">
@@ -101,12 +116,10 @@ export default function App() {
             ))}
         </select>
         <button className="SubsectorBtn" onClick={SubsectorBtnClicked}>Create a Subsector</button>
-        
-        
       </div>
 
       <div className="galaxycreator area">
-        <p>Eventually the controls for a galaxy creator will go here.</p>
+        <button className="GalaxyBtn" onClick={GalaxyBtnClicked}>Create a Galaxy</button>
       </div>
 
       <div className="export area">
@@ -119,4 +132,41 @@ export default function App() {
       <div className="details area">{clickedDetail}</div>
     </div>
   );
+}
+
+function RenderGalaxy(galaxy){
+  const flatGalaxy = galaxy.flat(Infinity).filter((line) => typeof line === 'string' && line.trim() !=='');
+
+  const extractIdentifiers = (planet) => {
+    const parts = planet.split(',');
+    const id = parts[0];
+    const splitId = id.split('');
+    return {
+      firstDigit: splitId[0], // The first digit
+      thirdDigit: splitId[2]  // The third digit
+    };
+  };
+
+  const sectors = {};
+
+  flatGalaxy.split(',').forEach(planet => {
+    const { firstDigit, thirdDigit } = extractIdentifiers(planet);
+    const groupKey = `${firstDigit}${thirdDigit}`;
+    
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+
+    groups[groupKey].push(planet);
+  });
+
+  const sortedGroups = Object.keys(groups).sort();
+  const groupedPlanets = sortedGroups.map(groupKey => {
+    return {
+      group: groupKey,
+      planets: groups[groupKey]
+    };
+  });
+
+  return groupedPlanets;
 }
