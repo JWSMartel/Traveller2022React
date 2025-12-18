@@ -3,31 +3,41 @@ import { CreatePlanet } from "./CreatePlanet";
 import { CreateSubsector } from "./CreateSubsector";
 import { RenderPlanet } from "./RenderPlanet";
 import { RenderSubsector } from "./RenderSubsector";
-import { subsectorExport } from "./utils/SubsectorExport";
+import { SubsectorExport } from "./utils/SubsectorExport";
+import { PlanetExport } from "./utils/PlanetExport";
 
 export default function App() {
+  //UI Elements
   const [output, setOutput] = useState("");
   const [userInput, setUserInput] = useState();
   const [sectorDensity, setSectorDensity] = useState('Standard');
   const densities = ['Rift','Sparse','Standard','Dense'];
   const [clickedDetail, setClickedDetail] = useState(null);
+
+  //Pass data for planet export
+  const [planet, setPlanet] = useState();
+
+  //Flatten and pass data for subsector export
   const [routes, setRoutes] = useState([]);
   const [flatSubsector, setFlatSubsector] = useState([]);
   const [flatDetails, setFlatDetails] = useState([]);
+
+  //flags for export context
   const [planetShow, setPlanetShow] = useState(false);
   const [sectorShow, setSectorShow] = useState(false);
   const [galaxyShow, setgalaxyShow] = useState(false);
 
   const PlanetBtnClicked = () => {
     setClickedDetail(null);
-    const planet=CreatePlanet(userInput);
+    const newPlanet = CreatePlanet(userInput);
+    setPlanet(newPlanet);
     
     setPlanetShow(true);
     setSectorShow(false);
     setgalaxyShow(false);
     setClickedDetail(null);
 
-    setOutput(RenderPlanet(planet));
+    setOutput(RenderPlanet(newPlanet));
   };
 
   const SubsectorBtnClicked = () =>{
@@ -67,9 +77,9 @@ export default function App() {
 
   const handleExport = () =>{
     if(planetShow){
-      //export planet data
+      PlanetExport(planet);
     }else if(sectorShow){
-      subsectorExport(routes, flatSubsector, flatDetails);
+      SubsectorExport(routes, flatSubsector, flatDetails);
     }else if(galaxyShow){
       //export galaxy data
     }

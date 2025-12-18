@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 
-export function subsectorExport( routes, flatSubsector, flatDetails ) {
+export function SubsectorExport( routes, flatSubsector, flatDetails ) {
   const rows = [{
     Type: "",
     Name: "",
@@ -34,7 +34,7 @@ export function subsectorExport( routes, flatSubsector, flatDetails ) {
     const details = flatDetails[index];
     const planetData = [{//Even as an array with one object this is needed for the export
       Type: "Planet",
-      Name: String(planet),
+      Name: details?.name,
       Starport: details?.starport,
       Size: details?.size,
       Gravity: details?.g,
@@ -45,8 +45,6 @@ export function subsectorExport( routes, flatSubsector, flatDetails ) {
       Pop: details?.pop,
       Govt: details?.govt,
       Gov_Desc: details?.govDes.map(item => item.props?.children).join('\n'),
-      
-      
       Culture: details?.culture,
       Culture_Desc: details?.cultDesc,
       Law: details?.law,
@@ -57,10 +55,9 @@ export function subsectorExport( routes, flatSubsector, flatDetails ) {
       Details: details?.description,
       S_Gear: details?.survivalGearReq
     }];
-    console.log("govDes: "+planetData[0].Gov_Desc);
     rows.push({
       Type: "Planet",
-      Name: String(planet),
+      Name: details?.name,
       Starport: details?.starport,
       Size: details?.size,
       Gravity: details?.g,
@@ -91,5 +88,5 @@ export function subsectorExport( routes, flatSubsector, flatDetails ) {
   workbook.SheetNames = sheetNames;
   workbook.Sheets = sheets;
 
-  XLSX.writeFile(workbook, "subsector.xlsx");
+  XLSX.writeFile(workbook, "Subsector.xlsx");
 }
