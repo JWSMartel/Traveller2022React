@@ -26,11 +26,11 @@ export function CreateGov(popRoll) {
     for (let f = 1; f <= numOfFactions; f++) {
       description += "\n\nSplinter faction #" + f + ": ";
       const {fgov, fdescription} = CreateFaction(popRoll);
-      description += fgov + '\n'+fdescription;
+      description += fgov + ' \n'+fdescription;
     }
   }
 
-  const formatting = description.split('\n').map((line,index) =>(<div>{line}</div>));
+  const formatting = description.split('\n').map((line,index) =>(<span className="splinter" key={index}>{line}</span>));
 
   return { govt, name, formatting, govRoll };
 }

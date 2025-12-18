@@ -17,8 +17,7 @@ export function subsectorExport( routes, flatSubsector, flatDetails ) {
     Law: "",
     Tech: "",
     Trade_Codes: "",
-    Zoning: "",
-    Details: ""
+    Zoning: ""
   }];
   
   const workbook = XLSX.utils.book_new();
@@ -33,27 +32,33 @@ export function subsectorExport( routes, flatSubsector, flatDetails ) {
   
   flatSubsector?.forEach((planet, index) => {
     const details = flatDetails[index];
-    rows.push({
+    const planetData = [{//Even as an array with one object this is needed for the export
       Type: "Planet",
       Name: String(planet),
-      Starport: JSON.stringify(details?.starport),
-      Size: JSON.stringify(details?.size),
-      Gravity: JSON.stringify(details?.g),
-      Atmo: JSON.stringify(details?.atmo),
-      Pressure: JSON.stringify(details?.pressure),
-      Temperature: JSON.stringify(details?.temp),
-      Hydro: JSON.stringify(details?.hydro),
-      Pop: JSON.stringify(details?.pop),
-      Govt: JSON.stringify(details?.govt),
-      Culture: JSON.stringify(details?.culture),
-      Law: JSON.stringify(details?.law),
-      Tech: JSON.stringify(details?.tech),
-      Trade_Codes: JSON.stringify(details?.tradeCodes),
-      Zoning: JSON.stringify(details?.zone),
-      Details: JSON.stringify(details?.description)
-    });
-
-    const planetData = [{
+      Starport: details?.starport,
+      Size: details?.size,
+      Gravity: details?.g,
+      Atmo: details?.atmo,
+      Pressure: details?.pressure,
+      Temperature: details?.temp,
+      Hydro: details?.hydro,
+      Pop: details?.pop,
+      Govt: details?.govt,
+      Gov_Desc: details?.govDes.map(item => item.props?.children).join('\n'),
+      
+      
+      Culture: details?.culture,
+      Culture_Desc: details?.cultDesc,
+      Law: details?.law,
+      Tech: details?.tech,
+      Tech_Desc: details?.tDesc,
+      Trade_Codes: details?.tradeCodes,
+      Zoning: details?.zone,
+      Details: details?.description,
+      S_Gear: details?.survivalGearReq
+    }];
+    console.log("govDes: "+planetData[0].Gov_Desc);
+    rows.push({
       Type: "Planet",
       Name: String(planet),
       Starport: details?.starport,
@@ -70,15 +75,21 @@ export function subsectorExport( routes, flatSubsector, flatDetails ) {
       Tech: details?.tech,
       Trade_Codes: details?.tradeCodes,
       Zoning: details?.zone,
-      Details: details?.description
-    }];
-
+    });
+    
     const worksheetPlanet = XLSX.utils.json_to_sheet(planetData);
-    XLSX.utils.book_append_sheet(workbook, worksheetPlanet, planetData.Name);
+    XLSX.utils.book_append_sheet(workbook, worksheetPlanet,planetData[0].Name.slice(0,4));
   });
 
   const worksheet = XLSX.utils.json_to_sheet(rows);
   XLSX.utils.book_append_sheet(workbook, worksheet, "Subsector");
+
+  const sheets = workbook.Sheets;
+  const sheetNames = workbook.SheetNames;
+  const subsectorSheet = sheetNames.pop();
+  sheetNames.unshift(subsectorSheet);
+  workbook.SheetNames = sheetNames;
+  workbook.Sheets = sheets;
 
   XLSX.writeFile(workbook, "subsector.xlsx");
 }

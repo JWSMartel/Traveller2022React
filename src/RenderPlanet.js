@@ -19,7 +19,7 @@ export function RenderPlanet(planet) {
         Zoning: {planet.zone}<br />
       </p>
       <p>Planet Description: <br />{planet.description}</p>
-      <p>{planet.ovDes}</p>
+      <p>{planet.govDes}</p>
       <p>{planet.cultDesc}</p>
       <p>{planet.tDesc}</p>
       {planet.survivalGearReq !== undefined ? (<p>Requried survival gear: {planet.survivalGearReq}</p>) : null}
