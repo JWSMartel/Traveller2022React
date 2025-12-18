@@ -17,7 +17,6 @@ export default function App() {
   const [planetShow, setPlanetShow] = useState(false);
   const [sectorShow, setSectorShow] = useState(false);
   const [galaxyShow, setgalaxyShow] = useState(false);
-  const [currentSub, setCurrentSub] = useState(null);
 
   const PlanetBtnClicked = () => {
     setClickedDetail(null);
@@ -39,9 +38,6 @@ export default function App() {
     setFlatSubsector(flatSub);
     setFlatDetails(flatDet);
     setRoutes(routeList);
-
-    const subData = {flatSub, flatDet, routeList};
-    setCurrentSub(subData);
 
     setPlanetShow(false);
     setSectorShow(true);
@@ -73,9 +69,6 @@ export default function App() {
     if(planetShow){
       //export planet data
     }else if(sectorShow){
-      console.log("Routes before pass: "+routes.routeList);
-      console.log("Sub before pass: "+flatSubsector);
-      console.log("Deets before pass: "+flatDetails);
       subsectorExport(routes, flatSubsector, flatDetails);
     }else if(galaxyShow){
       //export galaxy data
