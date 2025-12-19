@@ -11,11 +11,17 @@ import { CreatePlanetSize } from "./CreatePlanetSize";
 import { CreateStarport } from "./CreateStarport";
 import { CreateTechLevel } from "./CreateTechLevel";
 import { CreateTemp } from "./CreateTemp";
+import { Roll } from "./Roll";
 
 export function CreatePlanet(userInput) {
   let description = "";
   let name = '';
   let survivalGearReq;
+  let gasGiant = true;
+
+  if (Roll(2, 12) >= 10) {
+    gasGiant = false;
+  }
 
   //Size
   const { name: planetName, size: planetSize, g: planetGravity, description: planetDescription, sizeRoll: sizeRoll } = CreatePlanetSize();
@@ -48,9 +54,7 @@ export function CreatePlanet(userInput) {
   const {name: popName, popRoll: popRollRoll, pbg:popPbg, pop:popPop, description:popDescription} = CreatePlanetPop();
   name += popName;
   const popRoll = popRollRoll;
-  const pbg = popPbg;
   const pop =  popPop;
-  //description += popDescription;
   const popDesc = popDescription;
 
   //Starport
@@ -88,14 +92,12 @@ export function CreatePlanet(userInput) {
     const {govt:govType, name:govName, formatting:govtDescription, govRoll:govGovRoll} = CreateGov(popRoll);
     govt = govType;
     name += govName;
-    //description += govtDescription;
     govDes = govtDescription;
     govRoll = govGovRoll;
     //Culture
     const {culture:cultCulture, description:cultDescription} = CreateCulture();
     culture = cultCulture;
     cultDesc = cultDescription;
-    //description += cultDescription;
     //Law Level
     law = CreateLawLevel(govRoll);
     name += law;
@@ -103,7 +105,6 @@ export function CreatePlanet(userInput) {
     const {tech:techTech, description:techDescription, techRoll:techRRoll} = CreateTechLevel(starport, sizeRoll, atmoRoll, hydro, popRoll, govRoll);
     tech = techTech;
     tDesc = techDescription;
-    //description += techDescription;
     name += '-'+tech;
     techRoll = techRRoll;
     //Bases
@@ -114,6 +115,31 @@ export function CreatePlanet(userInput) {
   //Trade Codes
   const {tradeCodes, tsDesc} = CheckTradeCodes(sizeRoll, atmoRoll, hydroRoll, popRoll, govRoll, law, techRoll);
   description += tsDesc;
+
+  //PBG
+  const popMulti = Roll(1,9);
+  let numRings;
+  switch(Roll(1,6)){
+    case 1:
+    case 2:
+      numRings = 0;
+      break;
+    case 3:
+    case 4:
+      numRings = Roll(1,3);
+      break;
+    case 5:
+      numRings = Roll(3,6);
+      break;
+    case 6:
+      numRings = Roll(7,9);
+      break;
+  }
+  let numGGiants = 0;
+  if(gasGiant){
+    numGGiants = Roll(1,6);
+  }
+  const PBG = `${popMulti}${numRings}${numGGiants}`;
 
   //Zoning
   const zone = CheckZoning(atmoRoll, govRoll, law);   
@@ -143,11 +169,13 @@ export function CreatePlanet(userInput) {
   }else if(zone === 'Amber'){
     name += 'A';
   }
+  
+  name += ' '+PBG;
 
   if(userInput != undefined){
     name = userInput+' '+name;
   }
 
-  const planet = {name, starport,size,g,atmo,pressure,temp,hydro,pop,govt,culture,law,tech,tradeCodes,zone,description,govDes,cultDesc,tDesc,survivalGearReq};
+  const planet = {name, starport,size,g,atmo,pressure,temp,hydro,pop,govt,culture,law,tech,tradeCodes,zone,description,govDes,cultDesc,tDesc,survivalGearReq, PBG};
   return planet;
 }

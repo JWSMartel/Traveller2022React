@@ -10,26 +10,11 @@ export function GalaxyExport(galaxy) {
         rows.push({
             Type: "Sector",
             Name: `${sectorKey} - ${sectorData.sectorType}`,
-            Starport: "",
-            Size: "",
-            Gravity: "",
-            Atmo: "",
-            Pressure: "",
-            Temperature: "",
-            Hydro: "",
-            Pop: "",
-            Govt: "",
-            Culture: "",
-            Law: "",
-            Tech: "",
-            Trade_Codes: "",
-            Zoning: ""
         });
 
         rows.push({
             Type: "Route",
             Name: "Route List",
-            Details: ""
         });
 
         if (sectorData.routeList && sectorData.routeList.length > 0) {
@@ -37,7 +22,6 @@ export function GalaxyExport(galaxy) {
                 rows.push({
                     Type: "Route",
                     Name: route.formatRoute,
-                    Details: ""
                 });
             });
         } else {
@@ -47,21 +31,6 @@ export function GalaxyExport(galaxy) {
         rows.push({
             Type: "Planet",
             Name: "Planet List",
-            Starport: "",
-            Size: "",
-            Gravity: "",
-            Atmo: "",
-            Pressure: "",
-            Temperature: "",
-            Hydro: "",
-            Pop: "",
-            Govt: "",
-            Culture: "",
-            Law: "",
-            Tech: "",
-            Trade_Codes: "",
-            Zoning: "",
-            Details: ""
         });
         
         if (sectorData.flatSub && sectorData.flatSub.length > 0) {
@@ -92,21 +61,6 @@ export function GalaxyExport(galaxy) {
             rows.push({
                 Type: "Planet",
                 Name: "No Planets",
-                Starport: "",
-                Size: "",
-                Gravity: "",
-                Atmo: "",
-                Pressure: "",
-                Temperature: "",
-                Hydro: "",
-                Pop: "",
-                Govt: "",
-                Culture: "",
-                Law: "",
-                Tech: "",
-                Trade_Codes: "",
-                Zoning: "",
-                Details: ""
             });
         }
         
@@ -136,6 +90,7 @@ export function GalaxyExport(galaxy) {
                     Tech: details?.tech,
                     Tech_Desc: details?.tDesc,
                     Trade_Codes: details?.tradeCodes,
+                    PBG: details?.PBG,
                     Zoning: details?.zone,
                     Details: details?.description,
                     S_Gear: details?.survivalGearReq

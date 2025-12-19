@@ -1,4 +1,4 @@
-export function FindRoutes(sec) {
+export function FindRoutes(sec, sectorCol, sectorRow) {
   const directions = [
     [-1, 0], // Left
     [1, 0], // Right
@@ -12,7 +12,7 @@ export function FindRoutes(sec) {
   const routes = [];
 
   function formatLocation(row, col) {
-    return `0${row}${col === 10 ? col : `0${col}`}`;
+    return `${sectorCol}${row}${col === 10 ? col : `${sectorRow}${col}`}`;
   }
 
   function addRoute(currentCellLoc, neighborCellLoc) {

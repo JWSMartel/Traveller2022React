@@ -16,5 +16,5 @@ export function CreateSubsector(sectorDensity, sectorCol = 0, sectorRow = 0) {
     });
   });
 
-  return [sectorMap, sectorMapDetails];
+  return [sectorMap, sectorMapDetails, sectorCol, sectorRow];
 }

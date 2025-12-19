@@ -11,7 +11,7 @@ export function CreateGalaxy() {
   const galaxyMap = sectorTypes.map((row, rowIndex) => 
     row.map((sectorType, colIndex) => {
       const [subsector, subsectorDetails] = CreateSubsector(sectorType, rowIndex, colIndex);
-      const [flatSub, flatDet, routeList] = RenderSubsector(subsector, subsectorDetails);
+      const [flatSub, flatDet, routeList] = RenderSubsector(subsector, subsectorDetails, rowIndex, colIndex);
       return {flatSub, flatDet, routeList, sectorType};
     })
   );

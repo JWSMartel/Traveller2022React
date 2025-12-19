@@ -1,24 +1,7 @@
 import * as XLSX from "xlsx";
 
 export function SubsectorExport( routes, flatSubsector, flatDetails ) {
-  const rows = [{
-    Type: "",
-    Name: "",
-    Starport: "",
-    Size: "",
-    Gravity: "",
-    Atmo: "",
-    Pressure: "",
-    Temperature: "",
-    Hydro: "",
-    Pop: "",
-    Govt: "",
-    Culture: "",
-    Law: "",
-    Tech: "",
-    Trade_Codes: "",
-    Zoning: ""
-  }];
+  const rows = [{}];
   
   const workbook = XLSX.utils.book_new();
 
@@ -26,7 +9,6 @@ export function SubsectorExport( routes, flatSubsector, flatDetails ) {
     rows.push({
       Type: "Route",
       Name: route.formatRoute,
-      Details: ""
     });
   });
   
@@ -51,6 +33,7 @@ export function SubsectorExport( routes, flatSubsector, flatDetails ) {
       Tech: details?.tech,
       Tech_Desc: details?.tDesc,
       Trade_Codes: details?.tradeCodes,
+      PBG: details?.PBG,
       Zoning: details?.zone,
       Details: details?.description,
       S_Gear: details?.survivalGearReq

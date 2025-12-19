@@ -83,8 +83,6 @@ export function CreateTechLevel(starport, size, atmo, hydro, pop, gov) {
 
   const techRoll = tech;
 
-  //Description of each tech level?
-
   //Communications
   if(tech<3){
     description += 'There is no telecommunication system whatsoever here except for whatever facilities the starport offers. ';

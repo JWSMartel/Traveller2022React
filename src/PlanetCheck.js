@@ -3,12 +3,7 @@ import { Roll } from "./Roll";
 
 export function PlanetCheck(sectorDensity, row, col, planetCount, sectorCol = 0, sectorRow = 0) {
   let occurrence = Roll(1, 6);
-  let gasGiant = true;
   const loc = `${sectorCol}${row}${col === 10 ? col : `${sectorRow}${col}`}`;
-
-  if (Roll(2, 12) >= 10) {
-    gasGiant = false;
-  }
 
   switch (sectorDensity) {
     case 'Rift':

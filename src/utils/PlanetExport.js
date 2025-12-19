@@ -21,6 +21,7 @@ export function PlanetExport(planet) {
         Tech_Desc: planet?.tDesc,
         Trade_Codes: planet?.tradeCodes,
         Zoning: planet?.zone,
+        PBG: planet?.PBG,
         Details: planet?.description,
         S_Gear: planet?.survivalGearReq
     }];
