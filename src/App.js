@@ -6,6 +6,7 @@ import { RenderSubsector } from "./RenderSubsector";
 import { SubsectorExport } from "./utils/SubsectorExport";
 import { PlanetExport } from "./utils/PlanetExport";
 import { CreateGalaxy } from "./CreateGalaxy";
+import { RenderGalaxy } from "./RenderGalaxy";
 
 export default function App() {
   //UI Elements
@@ -86,18 +87,57 @@ export default function App() {
     }
   }
 
+  const Sector = ({ sectorKey, sectorData, onPlanetClick }) => {
+    console.log("Sector Density: "+sectorData.sectorType)
+    return (
+      <div>
+        <p>{sectorKey} {sectorData.sectorType}</p>
+        {sectorData.routeList && sectorData.routeList.length > 0 ? (
+          <ul>
+            {sectorData.routeList.map((route, index) => (
+              <div key={index} className="route-li">route {route.formatRoute}</div>
+            ))}
+          </ul>
+        ) : (
+          <p>No Routes</p>
+        )}
+        {sectorData.flatSub.map((item, index) => (
+          <button 
+            key={index} 
+            className="planetdetailbtn" 
+            onClick={() => onPlanetClick(sectorData.flatDet[index])}
+          >
+            {String(item)}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   const GalaxyBtnClicked = () =>{
     const galaxy = CreateGalaxy();
-    const flatGalaxy = galaxy.flat(Infinity).filter((line) => typeof line === 'string' && line.trim() !=='');
-    console.log(flatGalaxy);
+    const sectors = RenderGalaxy(galaxy);
 
-    //console.log("Galaxy: "+RenderGalaxy(galaxy));
+    setOutput(
+      <>
+      {Object.keys(sectors).map((sectorKey, sectorIndex) => {
+        const sectorData = sectors[sectorKey];
+        return (
+          <Sector
+            key={sectorIndex}
+            sectorKey={sectorKey}
+            sectorData={sectorData}
+            onPlanetClick={PlanetDetails}
+          />
+        );
+      })}
+    </>
+    );
 
     setPlanetShow(false);
     setSectorShow(false);
     setGalaxyShow(true);
     setClickedDetail(null);
-    setOutput(null);
   }
 
   return (
@@ -132,41 +172,4 @@ export default function App() {
       <div className="details area">{clickedDetail}</div>
     </div>
   );
-}
-
-function RenderGalaxy(galaxy){
-  const flatGalaxy = galaxy.flat(Infinity).filter((line) => typeof line === 'string' && line.trim() !=='');
-
-  const extractIdentifiers = (planet) => {
-    const parts = planet.split(',');
-    const id = parts[0];
-    const splitId = id.split('');
-    return {
-      firstDigit: splitId[0], // The first digit
-      thirdDigit: splitId[2]  // The third digit
-    };
-  };
-
-  const sectors = {};
-
-  flatGalaxy.split(',').forEach(planet => {
-    const { firstDigit, thirdDigit } = extractIdentifiers(planet);
-    const groupKey = `${firstDigit}${thirdDigit}`;
-    
-    if (!groups[groupKey]) {
-      groups[groupKey] = [];
-    }
-
-    groups[groupKey].push(planet);
-  });
-
-  const sortedGroups = Object.keys(groups).sort();
-  const groupedPlanets = sortedGroups.map(groupKey => {
-    return {
-      group: groupKey,
-      planets: groups[groupKey]
-    };
-  });
-
-  return groupedPlanets;
 }
