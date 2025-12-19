@@ -7,6 +7,7 @@ import { SubsectorExport } from "./utils/SubsectorExport";
 import { PlanetExport } from "./utils/PlanetExport";
 import { CreateGalaxy } from "./CreateGalaxy";
 import { RenderGalaxy } from "./RenderGalaxy";
+import { GalaxyExport } from "./utils/GalaxyExport";
 
 export default function App() {
   //UI Elements
@@ -23,6 +24,9 @@ export default function App() {
   const [routes, setRoutes] = useState([]);
   const [flatSubsector, setFlatSubsector] = useState([]);
   const [flatDetails, setFlatDetails] = useState([]);
+
+  //Pass data for galaxy export
+  const [galaxyExportData, setGalaxyExportData] = useState([]);
 
   //flags for export context
   const [planetShow, setPlanetShow] = useState(false);
@@ -83,12 +87,11 @@ export default function App() {
     }else if(sectorShow){
       SubsectorExport(routes, flatSubsector, flatDetails);
     }else if(galaxyShow){
-      //export galaxy data
+      GalaxyExport(galaxyExportData);
     }
   }
 
   const Sector = ({ sectorKey, sectorData, onPlanetClick }) => {
-    console.log("Sector Density: "+sectorData.sectorType)
     return (
       <div>
         <p>{sectorKey} {sectorData.sectorType}</p>
@@ -117,6 +120,8 @@ export default function App() {
   const GalaxyBtnClicked = () =>{
     const galaxy = CreateGalaxy();
     const sectors = RenderGalaxy(galaxy);
+
+    setGalaxyExportData(sectors);
 
     setOutput(
       <>
@@ -173,3 +178,4 @@ export default function App() {
     </div>
   );
 }
+
