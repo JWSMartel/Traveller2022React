@@ -55,12 +55,10 @@ export function CreateCulture() {
         case 5:
           culture = "Influenced";
           description += "The culture is heavily influenced by another, neighbouring world. If you have the details for the neighbouring world, choose a cultural quirk that this world has adopted. If not roll for one. ";
-          //TODO: If adjacent to another planet, use their major culture
           break;
         case 6:
           culture = "Fusion";
           description += "The culture is heavily influenced by another, neighbouring world. If you have the details for the neighbouring world, choose a cultural quick that this world has adopted. If not, roll for one. ";
-          //TODO: Neighbor detection or roll again?
           break;
       }
       break;

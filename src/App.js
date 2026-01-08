@@ -28,7 +28,7 @@ export default function App() {
   //Pass data for galaxy export
   const [galaxyExportData, setGalaxyExportData] = useState([]);
 
-  //flags for export context
+  //Flags for export context
   const [planetShow, setPlanetShow] = useState(false);
   const [sectorShow, setSectorShow] = useState(false);
   const [galaxyShow, setGalaxyShow] = useState(false);

@@ -29,7 +29,7 @@ export function FindRoutes(sec, sectorCol, sectorRow) {
       const currentCell = sec[row][col];
       if (!currentCell) {
         continue;
-      }      
+      }
 
       // Check if current cell has a naval base
       if (currentCell.bases?.includes('Naval')) {
