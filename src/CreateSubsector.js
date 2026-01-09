@@ -3,8 +3,8 @@ import { Roll } from "./Roll";
 
 export function CreateSubsector(sectorDensity, sectorCol = 0, sectorRow = 0) {
   //Create an 8x10 array
-  let sectorMap = Array.from({ length: 8 }, () => Array(10).fill(0));
-  let sectorMapDetails = Array.from({ length: 8 }, () => Array(10).fill(0));
+  let sectorMap = Array.from({ length: 10 }, () => Array(8).fill(0));
+  let sectorMapDetails = Array.from({ length: 10 }, () => Array(8).fill(0));
   let planetCount = 0;
   const directions = [
     [-1, 0], // Left

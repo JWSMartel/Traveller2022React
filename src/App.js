@@ -49,44 +49,58 @@ export default function App() {
     setOutput(RenderPlanet(newPlanet));
   };
 
-  const SubsectorBtnClicked = () =>{
+  const SubsectorBtnClicked = () => {
     setClickedDetail(null);
+
+    // Generate subsector
     const [subsector, subsectorDetails] = CreateSubsector(sectorDensity);
+
+    // Render for flat list and routes
     const [flatSub, flatDet, routeList] = RenderSubsector(subsector, subsectorDetails);
 
     setFlatSubsector(flatSub);
     setFlatDetails(flatDet);
     setRoutes(routeList);
 
+    // Update board data
     setBoardSubsector({
       subsector,
       subsectorDetails,
-      routeList,
-      width: 8,
-      height: 10,
-    })
+      routeList
+    });
 
+    // Update UI flags
     setPlanetShow(false);
     setSectorShow(true);
     setGalaxyShow(false);
 
+    // Render routes + flat planet list buttons
     setOutput(
       <div>
-        {routeList.length>0?(
+        {routeList.length > 0 ? (
           <ul>
             {routeList.map((route, index) => (
-              <div key={index} className="route-li">route {route.formatRoute}</div>
+              <div key={index} className="route-li">
+                route {route.formatRoute}
+              </div>
             ))}
           </ul>
-        ):(
+        ) : (
           <p>No Routes</p>
         )}
         {flatSub.map((item, index) => (
-          <button key={index} className='planetdetailbtn' onClick={()=>PlanetDetails(flatDet[index])}>{String(item)}</button>
+          <button
+            key={index}
+            className="planetdetailbtn"
+            onClick={() => PlanetDetails(flatDet[index])}
+          >
+            {String(item)}
+          </button>
         ))}
       </div>
     );
   };
+
 
   const PlanetDetails = (planet) =>{
     setClickedDetail(RenderPlanet(planet));
@@ -156,37 +170,34 @@ export default function App() {
     setClickedDetail(null);
   }
 
-  function Board({boardSubsector, onHexClick}) {
-    if(!boardSubsector){
+  function Board({ boardSubsector, onHexClick }) {
+    if (!boardSubsector) {
       return null;
     }
-    const {subsector, width, height} = boardSubsector;
+
+    const { subsector } = boardSubsector;
 
     return (
       <div className="board">
-        {Array.from({ length: height }).map((_, row) => (
-        <div key={row} className="board-row">
-          {Array.from({ length: width }).map((_, col) => {
-            const planet = subsector[row]?.[col] ?? null;
-
-            return (
+        {subsector.map((row, rowIndex) => (
+          <div key={rowIndex} className="board-row">
+            {row.map((cell, colIndex) => (
               <Hex
-                key={`${row}-${col}`}
-                hasPlanet={!!planet}
-                row={row}
-                col={col}
-                onHexClick={() => onHexClick(row, col)}
+                key={`${rowIndex}-${colIndex}`}
+                hasPlanet={!!cell}
+                row={rowIndex}
+                col={colIndex}
+                onHexClick={() => onHexClick(rowIndex, colIndex)}
               />
-            );
-          })}
-        </div>
-      ))}
-    </div>
+            ))}
+          </div>
+        ))}
+      </div>
     );
   }
 
-  function Hex({ hasPlanet, row, col, onHexClick }) {
-    const hexId = `${String(col + 1).padStart(2, "0")}${String(row + 1).padStart(2, "0")}`;
+  function Hex({ row, col, hasPlanet, onHexClick }) {
+    const hexId = `${String(row).padStart(2, "0")}${String(col).padStart(2, "0")}`;
 
     return (
       <button className="hex" onClick={onHexClick}>
@@ -196,8 +207,11 @@ export default function App() {
     );
   }
 
-
   const onBoardHexClick = (row, col) => {
+    if (!boardSubsector) {
+      return;
+    }
+  
     const planet = boardSubsector.subsectorDetails[row]?.[col];
     if (planet) {
       PlanetDetails(planet);
@@ -211,7 +225,6 @@ export default function App() {
         <input type="text" id="userInput" value={userInput} onChange={(e) => setUserInput(e.target.value)}placeholder="Name your planet" />
         <button className="PlanetBtn" onClick={PlanetBtnClicked}>Create a Planet</button>
       </div>
-      
       <div className="subsectorcreator area">
         <select id="sectorDensity" value={sectorDensity} onChange={(e)=>setSectorDensity(e.target.value)}>
           <option value="" disabled>Standard</option>
@@ -221,15 +234,12 @@ export default function App() {
         </select>
         <button className="SubsectorBtn" onClick={SubsectorBtnClicked}>Create a Subsector</button>
       </div>
-
       <div className="galaxycreator area">
         <button className="GalaxyBtn" onClick={GalaxyBtnClicked}>Create a Galaxy</button>
       </div>
-
       <div className="export area">
         <button className="exportBtn" onClick={handleExport}>Export</button>
       </div>
-
       <div className="output area">
         <Board boardSubsector={boardSubsector} onHexClick={onBoardHexClick}/>
         {output}
@@ -238,22 +248,3 @@ export default function App() {
     </div>
   );
 }
-
-/*
-
-        <div className="board-row">
-          <Hex value={hexes[0]} onHexClick={() => PlanetBtnClicked()} />
-          <Hex value={hexes[1]} onHexClick={() => PlanetBtnClicked()} />
-          <Hex value={hexes[2]} onHexClick={() => PlanetBtnClicked()} />
-        </div>
-        <div className="board-row">
-          <Hex value={hexes[3]} onHexClick={() => PlanetBtnClicked()} />
-          <Hex value={hexes[4]} onHexClick={() => PlanetBtnClicked()} />
-          <Hex value={hexes[5]} onHexClick={() => PlanetBtnClicked()} />
-        </div>
-        <div className="board-row">
-          <Hex value={hexes[6]} onHexClick={() => PlanetBtnClicked()} />
-          <Hex value={hexes[7]} onHexClick={() => PlanetBtnClicked()} />
-          <Hex value={hexes[8]} onHexClick={() => PlanetBtnClicked()} />
-        </div>
-        */

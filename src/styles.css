@@ -52,8 +52,9 @@ ul {
 }
 
 .board-row:nth-child(even) {
-  margin-left: var(--hex-offset);
+  margin-left: calc(var(--hex-width) / 2);
 }
+
 
 .hex {
   width: var(--hex-width);
