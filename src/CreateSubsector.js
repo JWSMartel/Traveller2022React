@@ -56,11 +56,7 @@ export function CreateSubsector(sectorDensity, sectorCol = 0, sectorRow = 0) {
             dist++;
           }
         }
-        console.log("FLAG");
-        neighbors.forEach(n => console.log(n.culture));
-
         const neighborToBorrowFrom = neighbors[Roll(0,neighbors.length-1)];
-        console.log(`Final Answer: ${sectorMapDetails[rowIndex][colIndex].name} gets ${neighborToBorrowFrom.culture} from ${neighborToBorrowFrom.name}.`);
 
         sectorMapDetails[rowIndex][colIndex].cultDesc += sectorMapDetails[rowIndex][colIndex].culture === 'Influenced' ? ` Influenced by ${neighborToBorrowFrom.name}: ${neighborToBorrowFrom.cultDesc}` : ` Fused with culture from ${neighborToBorrowFrom.name}: ${neighborToBorrowFrom.cultDesc}`;
         sectorMapDetails[rowIndex][colIndex].culture += ' '+neighborToBorrowFrom.culture;

@@ -33,6 +33,9 @@ export default function App() {
   const [sectorShow, setSectorShow] = useState(false);
   const [galaxyShow, setGalaxyShow] = useState(false);
 
+  //Board
+  const [boardSubsector, setBoardSubsector] = useState(null);
+
   const PlanetBtnClicked = () => {
     setClickedDetail(null);
     const newPlanet = CreatePlanet(userInput);
@@ -54,6 +57,14 @@ export default function App() {
     setFlatSubsector(flatSub);
     setFlatDetails(flatDet);
     setRoutes(routeList);
+
+    setBoardSubsector({
+      subsector,
+      subsectorDetails,
+      routeList,
+      width: 8,
+      height: 10,
+    })
 
     setPlanetShow(false);
     setSectorShow(true);
@@ -145,6 +156,54 @@ export default function App() {
     setClickedDetail(null);
   }
 
+  function Board({boardSubsector, onHexClick}) {
+    if(!boardSubsector){
+      return null;
+    }
+    const {subsector, width, height} = boardSubsector;
+
+    return (
+      <div className="board">
+        {Array.from({ length: height }).map((_, row) => (
+        <div key={row} className="board-row">
+          {Array.from({ length: width }).map((_, col) => {
+            const planet = subsector[row]?.[col] ?? null;
+
+            return (
+              <Hex
+                key={`${row}-${col}`}
+                hasPlanet={!!planet}
+                row={row}
+                col={col}
+                onHexClick={() => onHexClick(row, col)}
+              />
+            );
+          })}
+        </div>
+      ))}
+    </div>
+    );
+  }
+
+  function Hex({ hasPlanet, row, col, onHexClick }) {
+    const hexId = `${String(col + 1).padStart(2, "0")}${String(row + 1).padStart(2, "0")}`;
+
+    return (
+      <button className="hex" onClick={onHexClick}>
+        <span className="hex-label">{hexId}</span>
+        {hasPlanet && <span className="planet-dot" />}
+      </button>
+    );
+  }
+
+
+  const onBoardHexClick = (row, col) => {
+    const planet = boardSubsector.subsectorDetails[row]?.[col];
+    if (planet) {
+      PlanetDetails(planet);
+    }
+  };
+
   return (
     <div>
       <div className="planetcreator area">
@@ -172,6 +231,7 @@ export default function App() {
       </div>
 
       <div className="output area">
+        <Board boardSubsector={boardSubsector} onHexClick={onBoardHexClick}/>
         {output}
       </div>
       <div className="details area">{clickedDetail}</div>
@@ -179,3 +239,21 @@ export default function App() {
   );
 }
 
+/*
+
+        <div className="board-row">
+          <Hex value={hexes[0]} onHexClick={() => PlanetBtnClicked()} />
+          <Hex value={hexes[1]} onHexClick={() => PlanetBtnClicked()} />
+          <Hex value={hexes[2]} onHexClick={() => PlanetBtnClicked()} />
+        </div>
+        <div className="board-row">
+          <Hex value={hexes[3]} onHexClick={() => PlanetBtnClicked()} />
+          <Hex value={hexes[4]} onHexClick={() => PlanetBtnClicked()} />
+          <Hex value={hexes[5]} onHexClick={() => PlanetBtnClicked()} />
+        </div>
+        <div className="board-row">
+          <Hex value={hexes[6]} onHexClick={() => PlanetBtnClicked()} />
+          <Hex value={hexes[7]} onHexClick={() => PlanetBtnClicked()} />
+          <Hex value={hexes[8]} onHexClick={() => PlanetBtnClicked()} />
+        </div>
+        */
