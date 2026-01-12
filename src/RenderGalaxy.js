@@ -5,7 +5,14 @@ export function RenderGalaxy(galaxy) {
     for(let col = 0; col<galaxy[row].length; col++){
       const sectorKey = `sector${row}${col}`;
 
+      const {
+        subsector,
+        subsectorDetails,
+      } = galaxy[row][col];
+
       sectors[sectorKey]={
+        subsector,
+        subsectorDetails,
         flatSub: galaxy[row][col].flatSub,
         flatDet: galaxy[row][col].flatDet,
         routeList: galaxy[row][col].routeList,

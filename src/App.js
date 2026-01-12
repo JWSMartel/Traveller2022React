@@ -77,6 +77,7 @@ export default function App() {
     // Render routes + flat planet list buttons
     setOutput(
       <div>
+        <Board boardSubsector={{subsector, subsectorDetails, routeList}} onHexClick={onBoardHexClick}/>
         {routeList.length > 0 ? (
           <ul>
             {routeList.map((route, index) => (
@@ -117,9 +118,25 @@ export default function App() {
   }
 
   const Sector = ({ sectorKey, sectorData, onPlanetClick }) => {
+
+    const onSectorHexClick = (row, col) => {
+      const planet = sectorData.subsectorDetails[row]?.[col];
+      if (planet) {
+        onPlanetClick(planet);
+      }
+    };
+
     return (
       <div>
-        <p>{sectorKey} {sectorData.sectorType}</p>
+        <h3>{sectorKey} {sectorData.sectorType}</h3>
+        <Board
+          boardSubsector={{
+            subsector: sectorData.subsector,
+            subsectorDetails: sectorData.subsectorDetails,
+            routeList: sectorData.routeList
+          }}
+          onHexClick={onSectorHexClick}
+        />
         {sectorData.routeList && sectorData.routeList.length > 0 ? (
           <ul>
             {sectorData.routeList.map((route, index) => (
@@ -153,12 +170,14 @@ export default function App() {
       {Object.keys(sectors).map((sectorKey, sectorIndex) => {
         const sectorData = sectors[sectorKey];
         return (
-          <Sector
-            key={sectorIndex}
-            sectorKey={sectorKey}
-            sectorData={sectorData}
-            onPlanetClick={PlanetDetails}
-          />
+          <>
+            <Sector
+              key={sectorIndex}
+              sectorKey={sectorKey}
+              sectorData={sectorData}
+              onPlanetClick={PlanetDetails}
+            />
+          </>
         );
       })}
     </>
@@ -241,7 +260,6 @@ export default function App() {
         <button className="exportBtn" onClick={handleExport}>Export</button>
       </div>
       <div className="output area">
-        <Board boardSubsector={boardSubsector} onHexClick={onBoardHexClick}/>
         {output}
       </div>
       <div className="details area">{clickedDetail}</div>
