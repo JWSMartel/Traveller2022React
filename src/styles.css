@@ -44,6 +44,10 @@ ul {
   gap: 20px;
 }
 
+.galaxy-output{
+  flex-direction: column;
+}
+
 .board {
   background: #0b1e3f;
   padding: 20px;
@@ -64,18 +68,28 @@ ul {
 }
 
 .galaxy-view {
-  display: block;
+  display: grid; /* Use grid layout */
+  grid-template-columns: repeat(4, 1fr); /* Create 4 equal columns */
+  grid-template-rows: auto;/*repeat(4, 1fr); /* Create 4 equal rows */
   width: 100%;
-}
 
-.subsector-view {
-  --hex-width: min(12vw, 12vh);
+  --hex-width: min(6vw, 6vh);
   --hex-height: calc(var(--hex-width) * 0.866);
   --hex-vertical-spacing: calc(var(--hex-height) * 0.75);
 }
 
-.galaxy-view {
-  --hex-width: min(2vw, 2vh);
+.galaxy-view > div {
+  background: #0b1e3f; /* Optional: Set background color for each sector */
+  padding: 20px;
+}
+
+.galaxy-view h3 {
+  color: #fff; /* Adjust heading color */
+  text-align: center;
+}
+
+.subsector-view {
+  --hex-width: min(12vw, 12vh);
   --hex-height: calc(var(--hex-width) * 0.866);
   --hex-vertical-spacing: calc(var(--hex-height) * 0.75);
 }
@@ -172,6 +186,12 @@ ul {
 .details-sub-m{
   display: flex;
   width:40vw;
+}
+
+.details-gal-m{
+  display: block;
+  width: 80%;
+  margin: 20px auto;
 }
 
 .details-sub-l{

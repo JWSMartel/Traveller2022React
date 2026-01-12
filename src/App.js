@@ -120,39 +120,31 @@ export default function App() {
         if (!current.galaxy) {
           return null;
         }
-        return Object.keys(current.galaxy).map((key) => {
+        const sectors = Object.keys(current.galaxy).map((key) => {
           const sectorData = current.galaxy[key];
-          return viewMode === "map" ? (
-            <>
-              <div key={key}>
-                <h3>{key} {sectorData.sectorType}</h3>
-                <div className="galaxy-view">
-                  <Board
-                    key={key}
-                    grid={sectorData.subsector}
-                    gridDetails={sectorData.subsectorDetails}
-                    onHexClick={PlanetDetails}
-                  />
-                </div>
-              </div>
-              <div className="details-gal-m area">{clickedDetail}</div>
-            </>
-          ) : (
-            <div className="list-view">
-              <div key={key}>
-                <h3>{key} {sectorData.sectorType}</h3>
-                <RouteList routes={sectorData.routeList} />
-                <PlanetButtonList
-                  names={sectorData.flatSub}
-                  planets={sectorData.flatDet}
-                  onPlanetClick={PlanetDetails}
-                  selectedPlanet={selectedPlanet}
+          return (
+            <div key={key}>
+              <h3>{key} {sectorData.sectorType}</h3>
+              <div className="galaxy-view">
+                <Board
+                  grid={sectorData.subsector}
+                  gridDetails={sectorData.subsectorDetails}
+                  onHexClick={PlanetDetails}
                 />
               </div>
-              <div className="details-gal-l area">{clickedDetail}</div>
             </div>
           );
         });
+        return (
+          <div className="galaxy-output">
+            <div className="galaxy-view">
+              {sectors}
+            </div>
+            <div className="details-gal-m area">
+              {clickedDetail}
+            </div>
+          </div>
+        );
       default:
         return null;
     }
