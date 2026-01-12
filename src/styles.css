@@ -8,6 +8,10 @@ body {
   padding: 0;
 }
 
+nav{
+  background: #00b8ff;
+}
+
 ul {
   padding: 0;
 }
@@ -29,37 +33,51 @@ ul {
   margin: 1em 0;
 }
 
-.output,
-.details {
-  display: inline-block;
-  max-width: 50%;
-  vertical-align: top;
-}
-
-.details {
-  margin-left: 10%;
-}
-
 :root {
-  --hex-width: 48px;
-  --hex-height: 41.57px;
+  --hex-width: min(5vw, 5vh);
+  --hex-height: calc(var(--hex-width) * 0.866);
   --hex-vertical-spacing: calc(var(--hex-height) * 0.75);
+}
+
+.output {
+  display: flex;
+  gap: 20px;
 }
 
 .board {
   background: #0b1e3f;
-  padding: 10px;
+  padding: 20px;
   display: inline-block;
   border-radius: 8px;
   position: relative;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  
   background-image:
     radial-gradient(1px 1px, rgba(255,255,255,0.8) 0%, transparent 100%),
     radial-gradient(2px 2px, rgba(255,255,255,0.6) 0%, transparent 100%),
     radial-gradient(1.5px 1.5px, rgba(255,255,255,0.5) 0%, transparent 100%);
   background-repeat: repeat;
-  background-size: 50px 50px, 80px 80px, 120px 120px;
+}
+
+.subsector-view {
+  display: inline-block;
+  width: 40vw;
+}
+
+.galaxy-view {
+  display: block;
+  width: 100%;
+}
+
+.subsector-view {
+  --hex-width: min(12vw, 12vh);
+  --hex-height: calc(var(--hex-width) * 0.866);
+  --hex-vertical-spacing: calc(var(--hex-height) * 0.75);
+}
+
+.galaxy-view {
+  --hex-width: min(2vw, 2vh);
+  --hex-height: calc(var(--hex-width) * 0.866);
+  --hex-vertical-spacing: calc(var(--hex-height) * 0.75);
 }
 
 .board-row {
@@ -75,7 +93,7 @@ ul {
   width: var(--hex-width);
   height: var(--hex-height);
   background: #12264b;
-  border: 1px solid #2a3a6a;
+  border: 0;
   position: relative;
   cursor: pointer;
 
@@ -85,9 +103,8 @@ ul {
   transition: background 0.2s, box-shadow 0.2s;
 }
 
-
 .hex:hover {
-  background: #1b2a57;
+  background: #8a2be2;
   box-shadow: 0 0 8px 2px #4da6ff;
 }
 
@@ -150,4 +167,18 @@ ul {
   color: white;
   font-weight: bold;
   cursor: default;
+}
+
+.details-sub-m{
+  display: flex;
+  width:40vw;
+}
+
+.details-sub-l{
+  display: inline-block;
+  max-width: 40%;
+}
+
+.list-view{
+  display: inline-block;
 }
