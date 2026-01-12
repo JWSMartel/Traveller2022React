@@ -77,7 +77,16 @@ export default function App() {
     // Render routes + flat planet list buttons
     setOutput(
       <div>
-        <Board boardSubsector={{subsector, subsectorDetails, routeList}} onHexClick={onBoardHexClick}/>
+        <Board
+          boardSubsector={{ subsector, subsectorDetails, routeList }}
+          onHexClick={(row, col) => {
+            const planet = subsectorDetails[row]?.[col];
+            if (planet){
+              PlanetDetails(planet);
+            }
+          }}
+        />
+        
         {routeList.length > 0 ? (
           <ul>
             {routeList.map((route, index) => (
@@ -118,6 +127,8 @@ export default function App() {
   }
 
   const Sector = ({ sectorKey, sectorData, onPlanetClick }) => {
+    const coord = sectorKey.replace('sector','');
+    const [sectorX, sectorY] = coord.split('').map(Number);
 
     const onSectorHexClick = (row, col) => {
       const planet = sectorData.subsectorDetails[row]?.[col];
@@ -133,8 +144,10 @@ export default function App() {
           boardSubsector={{
             subsector: sectorData.subsector,
             subsectorDetails: sectorData.subsectorDetails,
-            routeList: sectorData.routeList
+            routeList: sectorData.routeList,
           }}
+          sectorX= {sectorX}
+          sectorY={sectorY}
           onHexClick={onSectorHexClick}
         />
         {sectorData.routeList && sectorData.routeList.length > 0 ? (
@@ -189,34 +202,35 @@ export default function App() {
     setClickedDetail(null);
   }
 
-  function Board({ boardSubsector, onHexClick }) {
+  function Board({ boardSubsector, onHexClick, sectorX = 0, sectorY = 0}) {
     if (!boardSubsector) {
       return null;
     }
+const { subsector } = boardSubsector;
 
-    const { subsector } = boardSubsector;
-
-    return (
-      <div className="board">
-        {subsector.map((row, rowIndex) => (
-          <div key={rowIndex} className="board-row">
-            {row.map((cell, colIndex) => (
-              <Hex
-                key={`${rowIndex}-${colIndex}`}
-                hasPlanet={!!cell}
-                row={rowIndex}
-                col={colIndex}
-                onHexClick={() => onHexClick(rowIndex, colIndex)}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-    );
+  return (
+    <div className="board">
+      {subsector.map((row, rowIndex) => (
+        <div key={rowIndex} className="board-row">
+          {row.map((cell, colIndex) => (
+            <Hex
+              key={`${rowIndex}-${colIndex}`}
+              hasPlanet={!!cell}
+              row={rowIndex}
+              col={colIndex}
+              onHexClick={() => onHexClick(rowIndex, colIndex)}
+              sectorX={sectorX}
+              sectorY={sectorY}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
   }
 
-  function Hex({ row, col, hasPlanet, onHexClick }) {
-    const hexId = `${String(row).padStart(2, "0")}${String(col).padStart(2, "0")}`;
+  function Hex({ row, col, hasPlanet, onHexClick, sectorX, sectorY}) {
+    const hexId = `${sectorX}${row}${sectorY}${col}`;
 
     return (
       <button className="hex" onClick={onHexClick}>
@@ -225,17 +239,6 @@ export default function App() {
       </button>
     );
   }
-
-  const onBoardHexClick = (row, col) => {
-    if (!boardSubsector) {
-      return;
-    }
-  
-    const planet = boardSubsector.subsectorDetails[row]?.[col];
-    if (planet) {
-      PlanetDetails(planet);
-    }
-  };
 
   return (
     <div>
