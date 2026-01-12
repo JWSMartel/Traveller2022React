@@ -8,263 +8,184 @@ import { PlanetExport } from "./utils/PlanetExport";
 import { CreateGalaxy } from "./CreateGalaxy";
 import { RenderGalaxy } from "./RenderGalaxy";
 import { GalaxyExport } from "./utils/GalaxyExport";
+import {Board} from "./components/Board";
+import {RouteList} from "./components/RouteList";
+import { PlanetButtonList } from "./components/PlanetButtonList";
 
 export default function App() {
-  //UI Elements
-  const [output, setOutput] = useState("");
-  const [userInput, setUserInput] = useState();
-  const [sectorDensity, setSectorDensity] = useState('Standard');
-  const densities = ['Rift','Sparse','Standard','Dense'];
+  // --- State ---
+  const [userInput, setUserInput] = useState("");
+  const [sectorDensity, setSectorDensity] = useState("Standard");
   const [clickedDetail, setClickedDetail] = useState(null);
+  const [selectedPlanet, setSelectedPlanet] = useState(null);
+  const [viewMode, setViewMode] = useState("map");
 
-  //Pass data for planet export
-  const [planet, setPlanet] = useState();
+  const [current, setCurrent] = useState({
+    type: "planet", // 'planet' | 'sector' | 'galaxy'
+    planet: null,
+    subsector: null,
+    subsectorDetails: null,
+    routes: [],
+    flatSubsectorNames: [],
+    flatSubsectorPlanets: [],
+    galaxy: null,
+  });
 
-  //Flatten and pass data for subsector export
-  const [routes, setRoutes] = useState([]);
-  const [flatSubsector, setFlatSubsector] = useState([]);
-  const [flatDetails, setFlatDetails] = useState([]);
+  const densities = ["Rift", "Sparse", "Standard", "Dense"];
 
-  //Pass data for galaxy export
-  const [galaxyExportData, setGalaxyExportData] = useState([]);
+  // --- Handlers ---
+  const PlanetDetails = (planetObj) => {
+    setClickedDetail(RenderPlanet(planetObj));
+    setSelectedPlanet(planetObj);
+  };
 
-  //Flags for export context
-  const [planetShow, setPlanetShow] = useState(false);
-  const [sectorShow, setSectorShow] = useState(false);
-  const [galaxyShow, setGalaxyShow] = useState(false);
-
-  //Board
-  const [boardSubsector, setBoardSubsector] = useState(null);
 
   const PlanetBtnClicked = () => {
-    setClickedDetail(null);
     const newPlanet = CreatePlanet(userInput);
-    setPlanet(newPlanet);
-    
-    setPlanetShow(true);
-    setSectorShow(false);
-    setGalaxyShow(false);
+    setCurrent({ type: "planet", planet: newPlanet });
     setClickedDetail(null);
-
-    setOutput(RenderPlanet(newPlanet));
   };
 
   const SubsectorBtnClicked = () => {
-    setClickedDetail(null);
-
-    // Generate subsector
     const [subsector, subsectorDetails] = CreateSubsector(sectorDensity);
-
-    // Render for flat list and routes
     const [flatSub, flatDet, routeList] = RenderSubsector(subsector, subsectorDetails);
 
-    setFlatSubsector(flatSub);
-    setFlatDetails(flatDet);
-    setRoutes(routeList);
-
-    // Update board data
-    setBoardSubsector({
+    setCurrent({
+      type: "sector",
       subsector,
       subsectorDetails,
-      routeList
+      routes: routeList,
+      flatSubsectorNames: flatSub,
+      flatSubsectorPlanets: flatDet,
     });
-
-    // Update UI flags
-    setPlanetShow(false);
-    setSectorShow(true);
-    setGalaxyShow(false);
-
-    // Render routes + flat planet list buttons
-    setOutput(
-      <div>
-        <Board
-          boardSubsector={{ subsector, subsectorDetails, routeList }}
-          onHexClick={(row, col) => {
-            const planet = subsectorDetails[row]?.[col];
-            if (planet){
-              PlanetDetails(planet);
-            }
-          }}
-        />
-        
-        {routeList.length > 0 ? (
-          <ul>
-            {routeList.map((route, index) => (
-              <div key={index} className="route-li">
-                route {route.formatRoute}
-              </div>
-            ))}
-          </ul>
-        ) : (
-          <p>No Routes</p>
-        )}
-        {flatSub.map((item, index) => (
-          <button
-            key={index}
-            className="planetdetailbtn"
-            onClick={() => PlanetDetails(flatDet[index])}
-          >
-            {String(item)}
-          </button>
-        ))}
-      </div>
-    );
+    setClickedDetail(null);
   };
 
-
-  const PlanetDetails = (planet) =>{
-    setClickedDetail(RenderPlanet(planet));
-  }
-
-  const handleExport = () =>{
-    if(planetShow){
-      PlanetExport(planet);
-    }else if(sectorShow){
-      SubsectorExport(routes, flatSubsector, flatDetails);
-    }else if(galaxyShow){
-      GalaxyExport(galaxyExportData);
-    }
-  }
-
-  const Sector = ({ sectorKey, sectorData, onPlanetClick }) => {
-    const coord = sectorKey.replace('sector','');
-    const [sectorX, sectorY] = coord.split('').map(Number);
-
-    const onSectorHexClick = (row, col) => {
-      const planet = sectorData.subsectorDetails[row]?.[col];
-      if (planet) {
-        onPlanetClick(planet);
-      }
-    };
-
-    return (
-      <div>
-        <h3>{sectorKey} {sectorData.sectorType}</h3>
-        <Board
-          boardSubsector={{
-            subsector: sectorData.subsector,
-            subsectorDetails: sectorData.subsectorDetails,
-            routeList: sectorData.routeList,
-          }}
-          sectorX= {sectorX}
-          sectorY={sectorY}
-          onHexClick={onSectorHexClick}
-        />
-        {sectorData.routeList && sectorData.routeList.length > 0 ? (
-          <ul>
-            {sectorData.routeList.map((route, index) => (
-              <div key={index} className="route-li">route {route.formatRoute}</div>
-            ))}
-          </ul>
-        ) : (
-          <p>No Routes</p>
-        )}
-        {sectorData.flatSub.map((item, index) => (
-          <button 
-            key={index} 
-            className="planetdetailbtn" 
-            onClick={() => onPlanetClick(sectorData.flatDet[index])}
-          >
-            {String(item)}
-          </button>
-        ))}
-      </div>
-    );
-  };
-
-  const GalaxyBtnClicked = () =>{
+  const GalaxyBtnClicked = () => {
     const galaxy = CreateGalaxy();
     const sectors = RenderGalaxy(galaxy);
 
-    setGalaxyExportData(sectors);
+    setCurrent({
+      type: "galaxy",
+      galaxy: sectors,
+    });
+    setClickedDetail(null);
+  };
 
-    setOutput(
-      <>
-      {Object.keys(sectors).map((sectorKey, sectorIndex) => {
-        const sectorData = sectors[sectorKey];
-        return (
+  const handleExport = () => {
+    if (current.type === "planet"){
+      PlanetExport(current.planet);
+    } else if (current.type === "sector"){
+      SubsectorExport(current.routes, current.flatSubsectorNames, current.flatSubsectorPlanets);
+    } else if (current.type === "galaxy"){
+      GalaxyExport(current.galaxy);
+    } 
+  };
+
+  // --- Components ---
+  function RenderOutput() {
+    switch (current.type) {
+      case "planet":
+        return current.planet && RenderPlanet(current.planet);
+      case "sector":
+        if (!current.subsector){
+          return null;
+        } 
+        return viewMode === "map" ? (
+          <Board
+            grid={current.subsector}
+            gridDetails={current.subsectorDetails}
+            onHexClick={PlanetDetails}
+          />
+        ) : (
           <>
-            <Sector
-              key={sectorIndex}
-              sectorKey={sectorKey}
-              sectorData={sectorData}
+            <RouteList routes={current.routes} />
+            <PlanetButtonList
+              names={current.flatSubsectorNames}
+              planets={current.flatSubsectorPlanets}
               onPlanetClick={PlanetDetails}
+              selectedPlanet={selectedPlanet}
             />
           </>
         );
-      })}
-    </>
-    );
-
-    setPlanetShow(false);
-    setSectorShow(false);
-    setGalaxyShow(true);
-    setClickedDetail(null);
-  }
-
-  function Board({ boardSubsector, onHexClick, sectorX = 0, sectorY = 0}) {
-    if (!boardSubsector) {
-      return null;
+      case "galaxy":
+        if (!current.galaxy){
+          return null;
+        }
+        return Object.keys(current.galaxy).map((key) => {
+          const sectorData = current.galaxy[key];
+          return viewMode === "map" ? (
+            <div key={key}>
+              <h3>{key} {sectorData.sectorType}</h3>
+              <Board
+                key={key}
+                grid={sectorData.subsector}
+                gridDetails={sectorData.subsectorDetails}
+                onHexClick={PlanetDetails}
+              />
+            </div>
+          ) : (
+            <div key={key}>
+              <h3>{key} {sectorData.sectorType}</h3>
+              <RouteList routes={sectorData.routeList} />
+              <PlanetButtonList
+                names={sectorData.flatSub}
+                planets={sectorData.flatDet}
+                onPlanetClick={PlanetDetails}
+                selectedPlanet={selectedPlanet}
+              />
+            </div>
+          );
+        });
+      default:
+        return null;
     }
-const { subsector } = boardSubsector;
-
-  return (
-    <div className="board">
-      {subsector.map((row, rowIndex) => (
-        <div key={rowIndex} className="board-row">
-          {row.map((cell, colIndex) => (
-            <Hex
-              key={`${rowIndex}-${colIndex}`}
-              hasPlanet={!!cell}
-              row={rowIndex}
-              col={colIndex}
-              onHexClick={() => onHexClick(rowIndex, colIndex)}
-              sectorX={sectorX}
-              sectorY={sectorY}
-            />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
   }
 
-  function Hex({ row, col, hasPlanet, onHexClick, sectorX, sectorY}) {
-    const hexId = `${sectorX}${row}${sectorY}${col}`;
-
-    return (
-      <button className="hex" onClick={onHexClick}>
-        <span className="hex-label">{hexId}</span>
-        {hasPlanet && <span className="planet-dot" />}
-      </button>
-    );
-  }
-
+  // --- Render ---
   return (
     <div>
       <div className="planetcreator area">
         <label htmlFor="userInput">Enter Planet Name: </label>
-        <input type="text" id="userInput" value={userInput} onChange={(e) => setUserInput(e.target.value)}placeholder="Name your planet" />
+        <input
+          type="text"
+          id="userInput"
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="Name your planet"
+        />
         <button className="PlanetBtn" onClick={PlanetBtnClicked}>Create a Planet</button>
       </div>
+
       <div className="subsectorcreator area">
-        <select id="sectorDensity" value={sectorDensity} onChange={(e)=>setSectorDensity(e.target.value)}>
+        <select
+          id="sectorDensity"
+          value={sectorDensity}
+          onChange={(e) => setSectorDensity(e.target.value)}
+        >
           <option value="" disabled>Standard</option>
-            {densities.map((option, index)=>(
-            <option key={index} value={option}>{option}</option>
-            ))}
+          {densities.map((option, i) => (
+            <option key={i} value={option}>{option}</option>
+          ))}
         </select>
         <button className="SubsectorBtn" onClick={SubsectorBtnClicked}>Create a Subsector</button>
       </div>
+
       <div className="galaxycreator area">
         <button className="GalaxyBtn" onClick={GalaxyBtnClicked}>Create a Galaxy</button>
       </div>
-      <div className="export area">
+
+      <div className="options area">
         <button className="exportBtn" onClick={handleExport}>Export</button>
+        <div className="view-toggle">
+          <button onClick={() => setViewMode(viewMode === "map" ? "list" : "map")}>Toggle View</button>
+        </div>
       </div>
+
       <div className="output area">
-        {output}
+        <RenderOutput />
       </div>
+
       <div className="details area">{clickedDetail}</div>
     </div>
   );
